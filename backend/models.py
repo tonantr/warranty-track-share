@@ -10,6 +10,7 @@ from validation import (
     validate_purchase_date,
     validate_warranty_expiration_date
 )
+from datetime import datetime
 
 from config import db, bcrypt
 
@@ -23,7 +24,7 @@ class User(db.Model, SerializerMixin):
 
     family_id = db.Column(db.Integer, db.ForeignKey("family.id"), nullable=False)
 
-    def __init__(self, username, password, name, email):
+    def __init__(self, username, password, name, email, family_id):
         is_valid_username(username)
         self.username = username
 
@@ -34,8 +35,10 @@ class User(db.Model, SerializerMixin):
 
         valid_email = is_valid_email(email)
         if valid_email == None:
-            raise ValueError("Invalid email address.")
+            raise ValueError("Invalid email address." + email)
         self.email = valid_email
+
+        self.family_id = family_id
 
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password, password)
@@ -67,7 +70,7 @@ class Product(db.Model, SerializerMixin):
     purchase_date = db.Column(db.Date, nullable=False)
     warranty_expiration_date = db.Column(db.Date, nullable=False)
 
-    def __init__(self, name, brand, model, serial_number, purchase_date, warranty_expiration_date):
+    def __init__(self, name, brand, model, purchase_date, warranty_expiration_date, serial_number=None):
         is_valid_product_name(name)
         self.name = name
 
@@ -80,10 +83,10 @@ class Product(db.Model, SerializerMixin):
         self.serial_number = serial_number
 
         validate_purchase_date(purchase_date)
-        self.purchase_date = purchase_date
+        self.purchase_date = datetime.strptime(purchase_date, "%m-%d-%Y").date()
 
         validate_warranty_expiration_date(warranty_expiration_date)
-        self.warranty_expiration_date = warranty_expiration_date
+        self.warranty_expiration_date = datetime.strptime(warranty_expiration_date, "%m-%d-%Y").date()
 
     def __repr__(self):
         return (
