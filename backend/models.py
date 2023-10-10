@@ -1,5 +1,10 @@
 from sqlalchemy_serializer import SerializerMixin
-from validation import is_valid_email, is_valid_name, is_valid_username
+from validation import (
+    is_valid_email,
+    is_valid_name,
+    is_valid_username,
+    is_valid_family_name,
+)
 
 from config import db, bcrypt
 
@@ -21,7 +26,7 @@ class User(db.Model, SerializerMixin):
 
         is_valid_name(name)
         self.name = name
-        
+
         valid_email = is_valid_email(email)
         if valid_email == None:
             raise ValueError("Invalid email address.")
@@ -39,6 +44,10 @@ class Family(db.Model, SerializerMixin):
     name = db.Column(db.String(100), nullable=False)
 
     users = db.relationship("User", backref="family", lazy=True)
+
+    def __init__(self, name):
+        is_valid_family_name(name)
+        self.name = name
 
     def __repr__(self):
         return f"Family(id={self.id}, name={self.name})"
