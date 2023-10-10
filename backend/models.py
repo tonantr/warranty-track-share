@@ -1,5 +1,5 @@
 from sqlalchemy_serializer import SerializerMixin
-from sqlalchemy.orm import validates
+from validation import is_valid_email, is_valid_name, is_valid_username
 
 from config import db, bcrypt
 
@@ -14,10 +14,18 @@ class User(db.Model, SerializerMixin):
     family_id = db.Column(db.Integer, db.ForeignKey("family.id"), nullable=False)
 
     def __init__(self, username, password, name, email):
+        is_valid_username(username)
         self.username = username
+
         self.password = bcrypt.generate_password_hash(password).decode("utf-8")
+
+        is_valid_name(name)
         self.name = name
-        self.email = email
+        
+        valid_email = is_valid_email(email)
+        if valid_email == None:
+            raise ValueError("Invalid email address.")
+        self.email = valid_email
 
     def check_password(self, password):
         return bcrypt.check_password_hash(self.password, password)
