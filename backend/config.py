@@ -20,4 +20,3 @@ api = Api(app)
 
 metadata = MetaData()
 
-db.init_app(app)

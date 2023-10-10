@@ -4,6 +4,11 @@ from validation import (
     is_valid_name,
     is_valid_username,
     is_valid_family_name,
+    is_valid_product_name,
+    is_valid_product_brand,
+    is_valid_product_model,
+    validate_purchase_date,
+    validate_warranty_expiration_date
 )
 
 from config import db, bcrypt
@@ -36,7 +41,7 @@ class User(db.Model, SerializerMixin):
         return bcrypt.check_password_hash(self.password, password)
 
     def __repr__(self):
-        return f"User(id={self.id}, username={self.username}, name={self.name}, email={self.email})"
+        return f"User(id={self.id}, username={self.username}, password={self.password}, name={self.name}, email={self.email})"
 
 
 class Family(db.Model, SerializerMixin):
@@ -56,23 +61,39 @@ class Family(db.Model, SerializerMixin):
 class Product(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    brand = db.Column(db.String(100))
-    model = db.Column(db.String(100))
+    brand = db.Column(db.String(100), nullable=False)
+    model = db.Column(db.String(100), nullable=False)
     serial_number = db.Column(db.String(100))
-    purchase_date = db.Column(db.Date)
-    warranty_expiration_date = db.Column(db.Date)
+    purchase_date = db.Column(db.Date, nullable=False)
+    warranty_expiration_date = db.Column(db.Date, nullable=False)
+
+    def __init__(self, name, brand, model, serial_number, purchase_date, warranty_expiration_date):
+        is_valid_product_name(name)
+        self.name = name
+
+        is_valid_product_brand(brand)
+        self.brand = brand
+
+        is_valid_product_model(model)
+        self.model = model
+
+        self.serial_number = serial_number
+
+        validate_purchase_date(purchase_date)
+        self.purchase_date = purchase_date
+
+        validate_warranty_expiration_date(warranty_expiration_date)
+        self.warranty_expiration_date = warranty_expiration_date
 
     def __repr__(self):
         return (
-            f"Product("
-            f"id={self.id}, "
+            f"Product(id={self.id}, "
             f"name={self.name}, "
             f"brand={self.brand}, "
             f"model={self.model}, "
             f"serial_number={self.serial_number}, "
             f"purchase_date={self.purchase_date}, "
             f"warranty_expiration_date={self.warranty_expiration_date}"
-            f")"
         )
 
 
@@ -82,3 +103,5 @@ class FamilyProductAssociation(db.Model, SerializerMixin):
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
     family = db.relationship("Family", backref="product_associations")
     product = db.relationship("Product", backref="family_associations")
+
+
