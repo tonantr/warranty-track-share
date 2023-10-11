@@ -1,11 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
-import RouteConfig from './RouteConfig'
+import { createRoot } from 'react-dom';
+import RouteConfig from './RouteConfig';
 
-ReactDOM.render(
-  <Router>
-    <RouteConfig />
-  </Router>,
-  document.getElementById('root')
+const root = createRoot(document.getElementById('root'));
+
+root.render(
+  <RouteConfig />
 );
