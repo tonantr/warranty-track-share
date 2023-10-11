@@ -8,7 +8,7 @@ from validation import (
     is_valid_product_brand,
     is_valid_product_model,
     validate_purchase_date,
-    validate_warranty_expiration_date
+    validate_warranty_expiration_date,
 )
 from datetime import datetime
 
@@ -70,7 +70,15 @@ class Product(db.Model, SerializerMixin):
     purchase_date = db.Column(db.Date, nullable=False)
     warranty_expiration_date = db.Column(db.Date, nullable=False)
 
-    def __init__(self, name, brand, model, purchase_date, warranty_expiration_date, serial_number=None):
+    def __init__(
+        self,
+        name,
+        brand,
+        model,
+        purchase_date,
+        warranty_expiration_date,
+        serial_number=None,
+    ):
         is_valid_product_name(name)
         self.name = name
 
@@ -86,7 +94,9 @@ class Product(db.Model, SerializerMixin):
         self.purchase_date = datetime.strptime(purchase_date, "%m-%d-%Y").date()
 
         validate_warranty_expiration_date(warranty_expiration_date)
-        self.warranty_expiration_date = datetime.strptime(warranty_expiration_date, "%m-%d-%Y").date()
+        self.warranty_expiration_date = datetime.strptime(
+            warranty_expiration_date, "%m-%d-%Y"
+        ).date()
 
     def __repr__(self):
         return (
@@ -106,5 +116,3 @@ class FamilyProductAssociation(db.Model, SerializerMixin):
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
     family = db.relationship("Family", backref="product_associations")
     product = db.relationship("Product", backref="family_associations")
-
-
