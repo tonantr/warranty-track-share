@@ -1,12 +1,23 @@
-import React from "react";
+import React from 'react';
+
 
 function Home() {
-    return (
-        <div>
-            <h1>Welcome to the Home Page</h1>
-            <p>This is the homepage content.</p>
-        </div>
-    );
+  return (
+    <div className="home">
+      <header>
+        <h1>WTS App</h1>
+      </header>
+
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/login">Login</a></li>
+          <li><a href="/signup">Signup</a></li>
+        </ul>
+      </nav>
+
+    </div>
+  );
 }
 
 export default Home;

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.prevenDefault();
@@ -18,9 +20,9 @@ function Login() {
             .then((response) => response.json())
             .then((data) => {
                 if (data.message === 'login successful') {
-                    window.location.href = '/dashboard';
+                    navigate("/dashboard");
                 } else {
-                    console.log('Invalid username or password' + data.message)
+                    console.log('Invalid username or password' + data.message);
                 }
             })
             .catch((error) => {
@@ -32,6 +34,7 @@ function Login() {
             <h1>Login</h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="username">Username:</label>
+                <br/>
                 <input 
                     type="text" 
                     id="username" 
@@ -42,6 +45,7 @@ function Login() {
                 />
                 <br/>
                 <label htmlFor="password">Password:</label>
+                <br/>
                 <input 
                     type="password" 
                     id="password" 
@@ -51,8 +55,11 @@ function Login() {
                     required
                 />
                 <br/>
+                <br/>
                 <button type="submit">Login</button>
             </form>
+            <br/>
+            <a href="/">Back</a>
         </div>
     );
 
