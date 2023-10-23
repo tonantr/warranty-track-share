@@ -49,7 +49,7 @@ class User(db.Model, SerializerMixin):
 
 class Family(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), unique=True, nullable=False)
 
     users = db.relationship("User", backref="family", lazy=True)
 
