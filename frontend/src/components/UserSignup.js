@@ -1,19 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-function Signup() {
+function UserSignup() {
     const [formData, setFormData] = useState({
         username: '',
         email: '',
         password: '',
         name: '',
-        family_id: '',
-        responseMessage: '',
+        family_id: ''
     });
+
+    const [responseMessage, setResponseMessage] = useState('');
+    const location = useLocation();
+    const navigate = useNavigate();
+    const familyId = new URLSearchParams(location.search).get("family_id")
+    const familyName = new URLSearchParams(location.search).get("family_name")
+
+    useEffect(() => {
+        if (familyId) {
+            setFormData({ ...formData, family_id: familyId });
+        }
+    }, [familyId]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        fetch('http://127.0.0.1:5555/signup', {
+        fetch('http://127.0.0.1:5555/usersignup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -22,17 +34,23 @@ function Signup() {
         })
             .then((response) => response.json())
             .then((data) => {
-                setFormData({ ...formData, responseMessage: data.message });
+                if (data.message === "Successful") {
+                    navigate("/login");
+                } else {
+                    setResponseMessage(data.message);
+                }
             })
             .catch((error) => {
-                setFormData({ ...formData, responseMessage: 'Error during registration.' });
-                console.error('Error during registration:', error);
+                setResponseMessage('Error during registration')
+                console.log(error);
             });
     };
 
     return (
-        <div className='signup-container'>
-            <h1>Sign Up</h1>
+        <div className='container'>
+            <h1>User Signup</h1>
+            <h3>Family Name: {familyName}</h3>
+            <br/>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="username">Username:</label>
                 <br />
@@ -90,7 +108,7 @@ function Signup() {
 
                 <br />
 
-                <label htmlFor="family_id">Family ID:</label>
+                <label htmlFor="family_id" style={{display: 'none'}}>Family ID:</label>
                 <br />
                 <input
                     type="number"
@@ -100,16 +118,18 @@ function Signup() {
                     onChange={(e) => setFormData({ ...formData, family_id: e.target.value })}
                     required
                     className='input-field'
+                    style={{display: 'none'}}
                 />
-                <br /> <br />
+
+                <br />
                 <div className='button-container'>
                     <button type="submit" className='custom-button'>Sign Up</button>
                 </div>
             </form>
 
             <br />
-            <div className='response-message' style={{color: 'red'}}>
-                {formData.responseMessage}
+            <div className='response-message'>
+                {responseMessage}
             </div>
 
             <br />
@@ -118,4 +138,4 @@ function Signup() {
     );
 }
 
-export default Signup;
+export default UserSignup;

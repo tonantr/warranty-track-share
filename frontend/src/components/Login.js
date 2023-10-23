@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { redirect, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 function Login() {
@@ -20,9 +20,10 @@ function Login() {
         })
             .then((response) => response.json())
             .then((data) => {
-                setResponseMessage(data.message);
-                if (data.message === 'login successful') {
+                if (data.message === 'Successful') {
                     navigate("/dashboard");
+                } else {
+                    setResponseMessage(data.message);
                 }
             })
             .catch((error) => {
@@ -31,7 +32,7 @@ function Login() {
             });
     };
     return (
-        <div className="login-container">
+        <div className="container">
             <h1>Login</h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="username">Username:</label>
@@ -64,7 +65,7 @@ function Login() {
             </form>
 
             <br/>
-            <div className="response-message" style={{color: 'red'}}>
+            <div className="response-message">
                 {responseMessage}
             </div>
 
