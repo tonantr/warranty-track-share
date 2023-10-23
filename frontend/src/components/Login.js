@@ -1,16 +1,17 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [responseMessage, setResponseMessage] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
-        e.prevenDefault();
+        e.preventDefault();
 
-        fetch('/login', {
+        fetch('http://127.0.0.1:5555/login', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -19,47 +20,56 @@ function Login() {
         })
             .then((response) => response.json())
             .then((data) => {
+                setResponseMessage(data.message);
                 if (data.message === 'login successful') {
                     navigate("/dashboard");
-                } else {
-                    console.log('Invalid username or password' + data.message);
                 }
             })
             .catch((error) => {
+                setResponseMessage('Error during login.')
                 console.error(error)
             });
     };
     return (
-        <div>
+        <div className="login-container">
             <h1>Login</h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="username">Username:</label>
                 <br/>
-                <input 
-                    type="text" 
-                    id="username" 
-                    name="username" 
-                    value={username} 
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
+                    className="input-field"
                 />
                 <br/>
                 <label htmlFor="password">Password:</label>
                 <br/>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password" 
-                    value={password} 
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    className="input-field"
                 />
-                <br/>
-                <br/>
-                <button type="submit">Login</button>
+                <br/><br/>
+                <div className="button-container">
+                    <button type="submit" className="custom-button">Login</button>
+                </div>
             </form>
+
             <br/>
-            <a href="/">Back</a>
+            <div className="response-message" style={{color: 'red'}}>
+                {responseMessage}
+            </div>
+
+            <br/>
+            <a href="/" className="custom-back-link"><span>Back</span></a>
         </div>
     );
 

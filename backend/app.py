@@ -1,4 +1,4 @@
-from flask import request, session
+from flask import request, session, make_response
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 
@@ -16,9 +16,13 @@ class Login(Resource):
 
         if user and user.check_password(password):
             session["user_id"] = user.id
-            return {"message": "Login successful", "username": user.username}, 200
+            response = make_response({"message": "login successful", "username": user.username}, 200)
+            response.headers['Access-Control-Allow-Origin'] = '*' 
+            return response
         else:
-            return {"message": "Invalid username or password"}, 401
+            response = make_response({"message": "Invalid username or password"}, 401)
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            return response
 
 class Signup(Resource):
     def post(self):
@@ -33,9 +37,13 @@ class Signup(Resource):
         existing_email = User.query.filter_by(email=email).first()
 
         if existing_user:
-            return {"message": "Username already exists."}, 400
+            response = make_response({"message": "Username already exists."}, 400)
+            response.headers['Access-Control-Allow-Origin'] = '*' 
+            return response
         if existing_email:
-            return {"message": "Email already in use."}, 400
+            response = make_response({"message": "Email already in use."}, 400)
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            return response
         
         new_user = User(
             username,
@@ -48,9 +56,13 @@ class Signup(Resource):
         try:
             db.session.add(new_user)
             db.session.commit()
-            return {"message": "User registration Successful"}, 201
+            response = make_response({"message": "User registration Successful"}, 201)
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            return response
         except IntegrityError:
-            return {"message": "An error occurred during registration."}, 500
+            response = make_response({"message": "An error occurred during registration."}, 500)
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            return response
         
 
 api.add_resource(Login, "/login", endpoint="login")

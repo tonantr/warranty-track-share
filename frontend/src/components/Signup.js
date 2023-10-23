@@ -7,12 +7,13 @@ function Signup() {
         password: '',
         name: '',
         family_id: '',
+        responseMessage: '',
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        fetch('/signup', {
+        fetch('http://127.0.0.1:5555/signup', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -21,81 +22,104 @@ function Signup() {
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.ok) {
-                    console.log(data.message);
-                } else {
-                    console.error(data.message); 
-                }
+                // if (data.ok) {
+                //     console.log(data.message);
+                // } else {
+                //     console.error(data.message);
+                // }
+
+                setFormData({ ...formData, responseMessage: data.message });
             })
             .catch((error) => {
+                setFormData({ ...formData, responseMessage: 'Error during registration.' });
                 console.error('Error during registration:', error);
             });
     };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-
     return (
-        <div>
+        <div className='signup-container'>
             <h1>Sign Up</h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="username">Username:</label>
+                <br />
                 <input
                     type="text"
                     id="username"
                     name="username"
                     value={formData.username}
-                    onChange={handleChange}
+                    onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                     required
+                    className='input-field'
                 />
 
+                <br />
+
                 <label htmlFor="email">Email:</label>
+                <br />
                 <input
                     type="email"
                     id="email"
                     name="email"
                     value={formData.email}
-                    onChange={handleChange}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     required
+                    className='input-field'
                 />
 
+                <br />
+
                 <label htmlFor="password">Password:</label>
+                <br />
                 <input
                     type="password"
                     id="password"
                     name="password"
                     value={formData.password}
-                    onChange={handleChange}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     required
+                    className='input-field'
                 />
 
+                <br />
+
                 <label htmlFor="name">Name:</label>
+                <br />
                 <input
                     type="text"
                     id="name"
                     name="name"
                     value={formData.name}
-                    onChange={handleChange}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
+                    className='input-field'
                 />
 
+                <br />
+
                 <label htmlFor="family_id">Family ID:</label>
+                <br />
                 <input
-                    type="text"
+                    type="number"
                     id="family_id"
                     name="family_id"
                     value={formData.family_id}
-                    onChange={handleChange}
+                    onChange={(e) => setFormData({ ...formData, family_id: e.target.value })}
                     required
+                    className='input-field'
                 />
-
-                <button type="submit">Sign Up</button>
+                <br /> <br />
+                <div className='button-container'>
+                    <button type="submit" className='custom-button'>Sign Up</button>
+                </div>
             </form>
+
+            <br />
+            <div className='response-message' style={{color: 'red'}}>
+                {formData.responseMessage}
+            </div>
+
+            <br />
+            <a href="/" className="custom-back-link"><span>Back</span></a>
         </div>
     );
 }
