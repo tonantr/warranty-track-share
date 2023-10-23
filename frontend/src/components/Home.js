@@ -3,9 +3,9 @@ import React from 'react';
 
 function Home() {
   return (
-    <div className="home">
+    <div className="home-container">
       <header>
-        <h1>WTS App</h1>
+        <h1>Warranty Track Share</h1>
       </header>
 
       <nav>

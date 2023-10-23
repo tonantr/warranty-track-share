@@ -22,12 +22,6 @@ function Signup() {
         })
             .then((response) => response.json())
             .then((data) => {
-                // if (data.ok) {
-                //     console.log(data.message);
-                // } else {
-                //     console.error(data.message);
-                // }
-
                 setFormData({ ...formData, responseMessage: data.message });
             })
             .catch((error) => {

@@ -26,6 +26,13 @@ code {
   justify-content: center;
 }
 
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .input-field {
   width: 200px;
 }
