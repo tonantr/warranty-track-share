@@ -28,6 +28,7 @@ class Login(Resource):
             response.headers["Access-Control-Allow-Origin"] = "*"
             return response
 
+
 class FamilySignup(Resource):
     def post(self):
         json_data = request.get_json()
@@ -50,7 +51,14 @@ class FamilySignup(Resource):
             family_id = new_family.id
             family_name = new_family.name
 
-            response = make_response({"message": "Successful", "family_id": family_id, "family_name": family_name}, 201)
+            response = make_response(
+                {
+                    "message": "Successful",
+                    "family_id": family_id,
+                    "family_name": family_name,
+                },
+                201,
+            )
             response.headers["Access-Control-Allow-Origin"] = "*"
             return response
         except IntegrityError:
@@ -59,6 +67,7 @@ class FamilySignup(Resource):
             )
             response.headers["Access-Control-Allow-Origin"] = "*"
             return response
+
 
 class UserSignup(Resource):
     def post(self):
@@ -97,6 +106,7 @@ class UserSignup(Resource):
             response.headers["Access-Control-Allow-Origin"] = "*"
             return response
 
+
 class FamilySearch(Resource):
     def post(self):
         name = request.get_json().get("name")
@@ -104,11 +114,7 @@ class FamilySearch(Resource):
         family = Family.query.filter_by(name=name).first()
 
         if family:
-            response_data = {
-                    "message": "Exist",
-                    "name": family.name,
-                    "id": family.id
-            }
+            response_data = {"message": "Exist", "name": family.name, "id": family.id}
         else:
             response_data = {"message": "Name does not exist"}
 
@@ -117,10 +123,34 @@ class FamilySearch(Resource):
         return response
 
 
+class ProductList(Resource):
+    def get(self):
+        product_list = []
+        products = Product.query.all()
+
+        for product in products:
+            product_dict = {
+                "id": product.id,
+                "name": product.name,
+                "brand": product.brand,
+                "model": product.model,
+                "serial_number": product.serial_number,
+                "purchase_date": product.purchase_date.strftime("%m-%d-%Y"),
+                "warranty_expiration_date": product.warranty_expiration_date.strftime(
+                    "%m-%d-%Y"
+                ),
+            }
+        product_list.append(product_dict)
+
+        response = make_response({"products": product_list}, 200)
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        return response
+
 api.add_resource(Login, "/login", endpoint="login")
 api.add_resource(FamilySignup, "/familysignup", endpoint="familysignup")
 api.add_resource(UserSignup, "/usersignup", endpoint="usersignup")
 api.add_resource(FamilySearch, "/familysearch", endpoint="familysearch")
+api.add_resource(ProductList, "/productlist", endpoint="productlist")
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
