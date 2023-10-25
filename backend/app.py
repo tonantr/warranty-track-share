@@ -140,7 +140,7 @@ class ProductList(Resource):
                     "%m-%d-%Y"
                 ),
             }
-        product_list.append(product_dict)
+            product_list.append(product_dict)
 
         response = make_response({"products": product_list}, 200)
         response.headers["Access-Control-Allow-Origin"] = "*"
