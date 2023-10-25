@@ -27,6 +27,11 @@ a {
   width: 200px;
 }
 
+.right-aligned-container {
+  text-align: right;
+  margin-right: 20px;
+}
+
 .response-message {
   color: red;
 }

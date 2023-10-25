@@ -8,8 +8,11 @@ function Logout() {
     }
 
     return (
-        // <button onClick={handleLogout}>Logout</button>
-        <a href="#" onClick={handleLogout} className="logout-button"><span>Logout</span></a>
+        <div className="right-aligned-container">
+            <a href="#" onClick={handleLogout} className="logout-button">
+                <span>Logout</span>
+            </a>
+        </div>
     );
 
 }
