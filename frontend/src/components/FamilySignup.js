@@ -32,9 +32,14 @@ function FamilySignup() {
 
     return (
         <div className="container">
-            <h1>Family Signup</h1>
+            <div className="back-link-container">
+                <a href="/" className="custom-back-link"><span>Back</span></a>
+            </div>
+            <br />
+            <h1>Signup</h1>
+            <br />
             <form onSubmit={handleSubmit}>
-                <label htmlFor="name">Name:</label>
+                <label htmlFor="name">Family Name:</label>
                 <br/>
                 <input 
                     type="text" 
@@ -56,8 +61,6 @@ function FamilySignup() {
                 {responseMessage}
             </div>
 
-            <br/>
-            <a href="/" className="custom-back-link"><span>Back</span></a>
         </div>
     )
 }

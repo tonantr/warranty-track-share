@@ -18,9 +18,11 @@ function UserSignup() {
 
     useEffect(() => {
         if (familyId) {
-            setFormData({ ...formData, family_id: familyId });
+            setFormData((formData) => {
+                return { ...formData, family_id: familyId }
+            });
         }
-    }, [familyId]);
+    }, [familyId, setFormData]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -48,6 +50,10 @@ function UserSignup() {
 
     return (
         <div className='container'>
+            <div className="back-link-container">
+                <a href="/" className="custom-back-link"><span>Back</span></a>
+            </div>
+            <br />
             <h1>User Signup</h1>
             <h3>Family Name: {familyName}</h3>
             <br/>
@@ -132,8 +138,6 @@ function UserSignup() {
                 {responseMessage}
             </div>
 
-            <br />
-            <a href="/" className="custom-back-link"><span>Back</span></a>
         </div>
     );
 }

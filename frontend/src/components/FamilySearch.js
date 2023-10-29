@@ -29,7 +29,10 @@ function FamilySearch() {
     }
     return (
         <div className="container">
-            <h1>Family Search</h1>
+            <div className="back-link-container">
+                <a href="/" className="custom-back-link"><span>Back</span></a>
+            </div>
+            <br />
             <div>
                 <input
                     type="text"
@@ -46,8 +49,6 @@ function FamilySearch() {
                 {responseMessage}
             </div>
 
-            <br/>
-            <a href="/" className="custom-back-link"><span>Back</span></a>
         </div>
     );
 }

@@ -33,10 +33,14 @@ function Login() {
     };
     return (
         <div className="container">
+            <div className="back-link-container">
+                <a href="/" className="custom-back-link"><span>Back</span></a>
+            </div>
+            <br />
             <h1>Login</h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="username">Username:</label>
-                <br/>
+                <br />
                 <input
                     type="text"
                     id="username"
@@ -46,9 +50,9 @@ function Login() {
                     required
                     className="input-field"
                 />
-                <br/>
+                <br />
                 <label htmlFor="password">Password:</label>
-                <br/>
+                <br />
                 <input
                     type="password"
                     id="password"
@@ -58,19 +62,17 @@ function Login() {
                     required
                     className="input-field"
                 />
-                <br/><br/>
+                <br /><br />
                 <div className="button-container">
                     <button type="submit" className="custom-button">Login</button>
                 </div>
             </form>
 
-            <br/>
+            <br />
             <div className="response-message">
                 {responseMessage}
             </div>
-
-            <br/>
-            <a href="/" className="custom-back-link"><span>Back</span></a>
+           
         </div>
     );
 
