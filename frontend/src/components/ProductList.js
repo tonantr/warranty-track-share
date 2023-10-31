@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from "react";
 
 import DataTable from "./DataTable";
+import Pagination from "./Pagination";
 
 function ProductList() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const handleAdd = () => {
-        console.log('Add button clicked');
-    };
+    const itemsPerPage = 10;
+    const [currentPage, setCurrentPage] = useState(1);
 
-    const handleEdit = () => {
-        // if (selectedRow) {
-        //     console.log('Edit button clicked for item:', selectedRow);
-        // }
-    };
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
 
-    const handleDelete = () => {
-        // if (selectedRow) {
-        //     const selectedItemId = selectedRow.id
-        //     console.log('Deleting item with ID:', selectedItemId);
-        // }
+    const currentItems = products.slice(startIndex, endIndex);
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
     };
 
     useEffect(() => {
@@ -45,7 +41,16 @@ function ProductList() {
         <div className="container">
             <h1>Product List</h1>
 
-            <DataTable data={products} />
+            <DataTable data={currentItems} />
+
+            <br />
+
+            <Pagination 
+                itemsPerPage={itemsPerPage}
+                totalItems={products.length}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+            />
 
             {/* <ul>
                 {products.map((product) => (
@@ -62,9 +67,9 @@ function ProductList() {
 
             <br />
             <div className='button-container'>
-                <button className='custom-button' onClick={handleAdd}>Add</button>
-                <button className='custom-button' onClick={handleDelete}>Delete</button>
-                <button className='custom-button' onClick={handleEdit}>Edit</button>
+                <button className='custom-button' >Add</button>
+                <button className='custom-button' >Delete</button>
+                <button className='custom-button' >Edit</button>
             </div>
 
         </div>

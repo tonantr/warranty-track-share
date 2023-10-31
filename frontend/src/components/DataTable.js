@@ -16,15 +16,15 @@ function DataTable({ data }) {
             </thead>
             <tbody>
                 {data.map((item) => (
-                <tr key={item.id}>
-                    <td>{item.id}</td>
-                    <td>{item.name}</td>
-                    <td>{item.brand}</td>
-                    <td>{item.model}</td>
-                    <td>{item.serial_number}</td>
-                    <td>{item.purchase_date}</td>
-                    <td>{item.warranty_expiration_date}</td>
-                </tr>
+                    <tr key={item.id}>
+                        <td>{item.id}</td>
+                        <td>{item.name}</td>
+                        <td>{item.brand}</td>
+                        <td>{item.model}</td>
+                        <td>{item.serial_number}</td>
+                        <td>{item.purchase_date}</td>
+                        <td>{item.warranty_expiration_date}</td>
+                    </tr>
                 ))}
             </tbody>
         </table>

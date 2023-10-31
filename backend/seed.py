@@ -51,7 +51,7 @@ def seed_database():
 
     products = []
 
-    for _ in range(20):
+    for _ in range(55):
         purchase_date_str = fake.date_between(start_date="-2y", end_date="+3y").strftime("%m-%d-%Y")
         warranty_date_str = fake.date_between(start_date="today", end_date="+3y").strftime("%m-%d-%Y")
 
