@@ -21,13 +21,10 @@ class Login(Resource):
             response = make_response(
                 {"message": "Successful", "username": user.username}, 200
             )
-            response.headers["Access-Control-Allow-Origin"] = "*"
             return response
         else:
             response = make_response({"message": "Invalid username or password"}, 401)
-            response.headers["Access-Control-Allow-Origin"] = "*"
             return response
-
 
 class FamilySignup(Resource):
     def post(self):
@@ -39,7 +36,6 @@ class FamilySignup(Resource):
 
         if existing_name:
             response = make_response({"message": "Name already exists."}, 400)
-            response.headers["Access-Control-Allow-Origin"] = "*"
             return response
 
         new_family = Family(name)
@@ -47,7 +43,6 @@ class FamilySignup(Resource):
         try:
             db.session.add(new_family)
             db.session.commit()
-            # pdb.set_trace()
             family_id = new_family.id
             family_name = new_family.name
 
@@ -59,15 +54,12 @@ class FamilySignup(Resource):
                 },
                 201,
             )
-            response.headers["Access-Control-Allow-Origin"] = "*"
             return response
         except IntegrityError:
             response = make_response(
                 {"message": "An error occurred during registration."}, 500
             )
-            response.headers["Access-Control-Allow-Origin"] = "*"
             return response
-
 
 class UserSignup(Resource):
     def post(self):
@@ -84,11 +76,9 @@ class UserSignup(Resource):
 
         if existing_user:
             response = make_response({"message": "Username already exists."}, 400)
-            response.headers["Access-Control-Allow-Origin"] = "*"
             return response
         if existing_email:
             response = make_response({"message": "Email already in use."}, 400)
-            response.headers["Access-Control-Allow-Origin"] = "*"
             return response
 
         new_user = User(username, password, name, email, family_id)
@@ -97,15 +87,12 @@ class UserSignup(Resource):
             db.session.add(new_user)
             db.session.commit()
             response = make_response({"message": "Successful"}, 201)
-            response.headers["Access-Control-Allow-Origin"] = "*"
             return response
         except IntegrityError:
             response = make_response(
                 {"message": "An error occurred during registration."}, 500
             )
-            response.headers["Access-Control-Allow-Origin"] = "*"
             return response
-
 
 class FamilySearch(Resource):
     def post(self):
@@ -119,9 +106,7 @@ class FamilySearch(Resource):
             response_data = {"message": "Name does not exist"}
 
         response = make_response(response_data, 200)
-        response.headers["Access-Control-Allow-Origin"] = "*"
         return response
-
 
 class ProductList(Resource):
     def get(self):
@@ -143,14 +128,46 @@ class ProductList(Resource):
             product_list.append(product_dict)
 
         response = make_response({"products": product_list}, 200)
-        response.headers["Access-Control-Allow-Origin"] = "*"
         return response
+
+class ProductAdd(Resource):
+    def post(self):
+        json_data = request.get_json()
+
+        name = json_data.get("name")
+        brand = json_data.get("brand")
+        model = json_data.get("model")
+        serial_number = json_data.get("serial_number")
+        purchase_date = json_data.get("purchase_date")
+        warranty_expiration_date = json_data.get("warranty_expiration_date")
+
+        new_product = Product(
+            name=name,
+            brand=brand,
+            model=model,
+            serial_number=serial_number,
+            purchase_date=purchase_date,
+            warranty_expiration_date=warranty_expiration_date
+        )
+
+        try:
+            db.session.add(new_product)
+            db.session.commit()
+            product_id = new_product.id
+            response = make_response({"message": "Successful", "id": product_id}, 201)
+            return response
+        except IntegrityError:
+            response = make_response({"message": "An error occurred while adding the product"}, 500)
+            return response
+        
 
 api.add_resource(Login, "/login", endpoint="login")
 api.add_resource(FamilySignup, "/familysignup", endpoint="familysignup")
 api.add_resource(UserSignup, "/usersignup", endpoint="usersignup")
 api.add_resource(FamilySearch, "/familysearch", endpoint="familysearch")
 api.add_resource(ProductList, "/productlist", endpoint="productlist")
+api.add_resource(ProductAdd, "/productadd", endpoint="productadd")
+
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)

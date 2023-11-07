@@ -41,14 +41,18 @@ a {
   align-self: flex-start;
 }
 
+.add-link-container {
+  align-self: flex-start;
+}
+
 .response-message {
   color: red;
 }
 
-.button-container {
+/* .button-container {
   display: flex;
   justify-content: center;
-}
+} */
 
 .custom-button {
   width: 200px;
@@ -66,6 +70,28 @@ a {
 .custom-back-link::before {
   content: '<< ';
   font-weight: normal;
+}
+
+.custom-add-button {
+  border: none;
+  background: none;
+  margin-left: 30px;
+  font-size: 16px;
+  color:blue;
+}
+
+.custom-update-button {
+  border: none;
+  background: none;
+  font-size: 16px;
+  color:blue;
+}
+
+.custom-delete-button {
+  border: none;
+  background: none;
+  font-size: 16px;
+  color:blue;
 }
 
 table {

@@ -1,6 +1,6 @@
 import React from "react";
 
-function DataTable({ data }) {
+function DataTable({ data, onDelete, onUpdate }) {
     return (
         <table>
             <thead>
@@ -12,6 +12,7 @@ function DataTable({ data }) {
                     <th>Serial Number</th>
                     <th>Purchase Date</th>
                     <th>Warranty Expiration Date</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,6 +25,10 @@ function DataTable({ data }) {
                         <td>{item.serial_number}</td>
                         <td>{item.purchase_date}</td>
                         <td>{item.warranty_expiration_date}</td>
+                        <td>
+                            <button className="custom-update-button" onClick={() => onUpdate(item)}>Update</button>
+                            <button className="custom-delete-button" onClick={() => onDelete(item)}>Delete</button>
+                        </td>
                     </tr>
                 ))}
             </tbody>

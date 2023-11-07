@@ -2,10 +2,13 @@ import React, { useState, useEffect } from "react";
 
 import DataTable from "./DataTable";
 import Pagination from "./Pagination";
+import AddProduct from "./AddProduct";
+import config from "./Config"
 
 function ProductList() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showAddForm, setShowAddForm] = useState(false);
 
     const itemsPerPage = 10;
     const [currentPage, setCurrentPage] = useState(1);
@@ -19,8 +22,34 @@ function ProductList() {
         setCurrentPage(newPage);
     };
 
+    const handleAddFormToggle = () => {
+        setShowAddForm(!showAddForm)
+    };
+
+    const handleAddProduct = (newProduct) => {
+        fetch(`${config.apiUrl}/productadd`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newProduct),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+                if (data.message === "Successful") {
+                    newProduct.id = data.id
+                    setProducts([...products, newProduct])
+                    setShowAddForm(false)
+                }
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
     useEffect(() => {
-        fetch('http://127.0.0.1:5555/productlist')
+        fetch(`${config.apiUrl}/productlist`)
             .then((response) => response.json())
             .then((data) => {
                 setProducts(data.products)
@@ -39,18 +68,32 @@ function ProductList() {
 
     return (
         <div className="container">
+            <div className="add-link-container">
+                <button onClick={handleAddFormToggle} className="custom-add-button">
+                    Add
+                </button>
+            </div>
+            <br />
             <h1>Product List</h1>
 
             <DataTable data={currentItems} />
 
             <br />
 
-            <Pagination 
+            <Pagination
                 itemsPerPage={itemsPerPage}
                 totalItems={products.length}
                 currentPage={currentPage}
                 onPageChange={handlePageChange}
             />
+
+            <br />
+
+            {showAddForm && (
+                <div>
+                    <AddProduct onAddProduct={handleAddProduct} />
+                </div>
+            )}
 
             {/* <ul>
                 {products.map((product) => (
@@ -64,13 +107,6 @@ function ProductList() {
                     </li>
                 ))}
             </ul> */}
-
-            <br />
-            <div className='button-container'>
-                <button className='custom-button' >Add</button>
-                <button className='custom-button' >Delete</button>
-                <button className='custom-button' >Edit</button>
-            </div>
 
         </div>
     );
