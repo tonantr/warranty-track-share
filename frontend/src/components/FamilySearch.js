@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import config from "./Config";
+
 function FamilySearch() {
     const [familyname, setFamilyName] = useState('');
     const [responseMessage, setResponseMessage] = useState('');
     const navigate = useNavigate();
 
     const searchFamily = () => {
-        fetch('http://127.0.0.1:5555/familysearch', {
+        fetch(`${config.apiUrl}/familysearch`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

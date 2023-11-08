@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 function AddProduct({ onAddProduct }) {
+    const [dateError, setDateError] = useState("");
     const [newProduct, setNewProduct] = useState({
         name: "",
         brand: "",
@@ -12,6 +13,17 @@ function AddProduct({ onAddProduct }) {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
+
+        if (name === "purchase_date" || name === "warranty_expiration_date") {
+            const datePattern = /^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-\d{4}$/;
+
+            if (!datePattern.test(value)) {
+                setDateError("Invalid date format")
+            } else {
+                setDateError("")
+            }
+        }
+
         setNewProduct({
             ...newProduct,
             [name]: value
@@ -93,7 +105,10 @@ function AddProduct({ onAddProduct }) {
                     className='input-field'
                     value={newProduct.purchase_date}
                     onChange={handleInputChange}
+                    placeholder="MM-DD-YYYY"
                 />
+
+                {dateError && <div className="response-message">{dateError}</div>}
 
                 <br />
 
@@ -107,7 +122,10 @@ function AddProduct({ onAddProduct }) {
                     className='input-field'
                     value={newProduct.warranty_expiration_date}
                     onChange={handleInputChange}
+                    placeholder="MM-DD-YYYY"
                 />
+
+                {dateError && <div className="response-message">{dateError}</div>}
 
                 <br /> <br />
                 <div className='button-container'>

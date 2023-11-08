@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import config from "./Config";
+
 function FamilySignup() {
     const [name, setName] = useState('');
     const [responseMessage, setResponseMessage] = useState('');
@@ -9,7 +11,7 @@ function FamilySignup() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        fetch('http://127.0.0.1:5555/familysignup', {
+        fetch(`${config.apiUrl}/familysignup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -18,6 +20,7 @@ function FamilySignup() {
         })
             .then((response) => response.json())
             .then((data) => {
+                console.log(data)
                 if (data.message === 'Successful') {
                     navigate(`/usersignup?family_id=${data.family_id}&family_name=${data.family_name}`);
                 } else {

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
+import config from "./Config";
 
 function Login() {
     const [username, setUsername] = useState('');
@@ -11,7 +12,7 @@ function Login() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        fetch('http://127.0.0.1:5555/login', {
+        fetch(`${config.apiUrl}/login`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'

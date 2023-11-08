@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import config from './Config';
+
 function UserSignup() {
     const [formData, setFormData] = useState({
         username: '',
@@ -27,7 +29,7 @@ function UserSignup() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        fetch('http://127.0.0.1:5555/usersignup', {
+        fetch(`${config.apiUrl}/usersignup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
