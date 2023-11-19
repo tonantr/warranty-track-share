@@ -23,6 +23,7 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String, unique=True, nullable=False)
 
     family_id = db.Column(db.Integer, db.ForeignKey("family.id"), nullable=False)
+    family = db.relationship("Family", backref="family_users", lazy=True)
 
     def __init__(self, username, password, name, email, family_id):
         is_valid_username(username)
@@ -51,7 +52,7 @@ class Family(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
 
-    users = db.relationship("User", backref="family", lazy=True)
+    users = db.relationship("User", backref="family_users", lazy=True)
 
     def __init__(self, name):
         is_valid_family_name(name)

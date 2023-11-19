@@ -1,4 +1,4 @@
-from flask import request, session, make_response
+from flask import request, session, make_response, g
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 
@@ -25,6 +25,14 @@ class Login(Resource):
         else:
             response = make_response({"message": "Invalid username or password"}, 401)
             return response
+
+class Logout(Resource):
+    def post(self):
+        session.clear()
+        response = make_response(
+                {"message": "Successful"}, 200
+            )
+        return response
 
 class FamilySignup(Resource):
     def post(self):
@@ -110,8 +118,29 @@ class FamilySearch(Resource):
 
 class ProductList(Resource):
     def get(self):
+        user_id = session.get("user_id")
+
+        # pdb.set_trace()
+        # print(user_id)
+
+        # if not user_id:
+        #     return make_response({"message": "User not authenticated"}, 401)
+        
+        user = User.query.get(11)
+
+        # if not user:
+        #     return make_response({"message": "User not found"}, 404)
+        
+        family = user.family
+
         product_list = []
-        products = Product.query.all()
+        # products = Product.query.all()
+        products = (
+            db.session.query(Product)
+            .join(FamilyProductAssociation)
+            .filter(FamilyProductAssociation.family_id == family.id)
+            .all()
+        )
 
         for product in products:
             product_dict = {
@@ -162,6 +191,7 @@ class ProductAdd(Resource):
         
 
 api.add_resource(Login, "/login", endpoint="login")
+api.add_resource(Logout, "/logout", endpoint="logout")
 api.add_resource(FamilySignup, "/familysignup", endpoint="familysignup")
 api.add_resource(UserSignup, "/usersignup", endpoint="usersignup")
 api.add_resource(FamilySearch, "/familysearch", endpoint="familysearch")

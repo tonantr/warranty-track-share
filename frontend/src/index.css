@@ -82,18 +82,17 @@ a {
   color:blue;
 }
 
-.custom-update-button {
+.custom-upddel-button {
   border: none;
   background: none;
   font-size: 16px;
   color:blue;
 }
 
-.custom-delete-button {
+.logout-button {
   border: none;
   background: none;
   font-size: 16px;
-  color:blue;
 }
 
 table {

@@ -26,8 +26,8 @@ function DataTable({ data, onDelete, onUpdate }) {
                         <td>{item.purchase_date}</td>
                         <td>{item.warranty_expiration_date}</td>
                         <td>
-                            <button className="custom-update-button" onClick={() => onUpdate(item)}>Update</button>
-                            <button className="custom-delete-button" onClick={() => onDelete(item)}>Delete</button>
+                            <button className="custom-upddel-button" onClick={() => onUpdate(item)}>Update</button>
+                            <button className="custom-upddel-button" onClick={() => onDelete(item)}>Delete</button>
                         </td>
                     </tr>
                 ))}
