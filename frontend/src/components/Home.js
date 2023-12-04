@@ -22,7 +22,7 @@ function Home() {
         <ul>
           <li><a href="/login">Login</a></li>
           <li><a href="/familysignup">Signup</a></li>
-          <li><a href="/familysearch">Search</a></li>
+          {/* <li><a href="/familysearch">Search</a></li> */}
           {/* <li>
             <a 
               href="/familysignup" 

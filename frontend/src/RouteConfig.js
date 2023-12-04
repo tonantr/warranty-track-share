@@ -7,7 +7,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import UserSignup from './components/UserSignup';
 import FamilySignup from './components/FamilySignup'
-import FamilySearch from './components/FamilySearch';
+// import FamilySearch from './components/FamilySearch';
 
 
 function RouteConfig() {
@@ -18,7 +18,7 @@ function RouteConfig() {
       <Route exact path="/login" element={<Login />} />
       <Route exact path="/usersignup" element={<UserSignup />} />
       <Route exact path="/familysignup" element={<FamilySignup />} />
-      <Route exact path="/familysearch" element={<FamilySearch />} />
+      {/* <Route exact path="/familysearch" element={<FamilySearch />} /> */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

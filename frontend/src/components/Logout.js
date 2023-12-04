@@ -8,15 +8,18 @@ function Logout() {
 
     const handleLogout = async () => {
         try {
+            const accessToken = localStorage.getItem('access_token');
             const response = await fetch(`${config.apiUrl}/logout`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`,
                 },
             });
 
             if (response.ok) {
-                navigate('/login')
+                localStorage.removeItem('access_token');
+                navigate('/login');
             } else {
                 console.error("Logout failed")
             }

@@ -21,7 +21,9 @@ function Login() {
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.message === 'Successful') {
+                // console.log(data)
+                if (data.message.toLowerCase() === 'successful') {
+                    localStorage.setItem('access_token', data.access_token);
                     navigate("/dashboard");
                 } else {
                     setResponseMessage(data.message);

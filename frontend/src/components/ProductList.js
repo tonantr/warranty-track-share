@@ -36,7 +36,7 @@ function ProductList() {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data)
+                // console.log(data)
                 if (data.message === "Successful") {
                     newProduct.id = data.id
                     setProducts([...products, newProduct])
@@ -49,14 +49,27 @@ function ProductList() {
     }
 
     useEffect(() => {
-        fetch(`${config.apiUrl}/productlist`)
-            .then((response) => response.json())
+        const token = localStorage.getItem('access_token');
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        };
+        fetch(`${config.apiUrl}/productlist`, {
+            method: 'GET',
+            headers: headers,
+        })
+            .then((response) => {
+                // console.log(response)
+                return response.json()
+            })
             .then((data) => {
+                // console.log(data)
                 setProducts(data.products)
                 setLoading(false)
             })
             .catch((error) => {
-                console.log(error)
+                console.error(error)
                 setLoading(false)
             })
 
