@@ -166,29 +166,43 @@ def product_list():
 
 
 @app.route("/productadd", methods=["POST"])
+@jwt_required()
 def product_add():
-    json_data = request.get_json()
-
-    name = json_data.get("name")
-    brand = json_data.get("brand")
-    model = json_data.get("model")
-    serial_number = json_data.get("serial_number")
-    purchase_date = json_data.get("purchase_date")
-    warranty_expiration_date = json_data.get("warranty_expiration_date")
-
-    new_product = Product(
-        name=name,
-        brand=brand,
-        model=model,
-        serial_number=serial_number,
-        purchase_date=purchase_date,
-        warranty_expiration_date=warranty_expiration_date,
-    )
-
     try:
+        user_id = get_jwt_identity()
+
+        json_data = request.get_json()
+
+        name = json_data.get("name")
+        brand = json_data.get("brand")
+        model = json_data.get("model")
+        serial_number = json_data.get("serial_number")
+        purchase_date = json_data.get("purchase_date")
+        warranty_expiration_date = json_data.get("warranty_expiration_date")
+
+        new_product = Product(
+            name=name,
+            brand=brand,
+            model=model,
+            serial_number=serial_number,
+            purchase_date=purchase_date,
+            warranty_expiration_date=warranty_expiration_date,
+        )
+
         db.session.add(new_product)
         db.session.commit()
+
         product_id = new_product.id
+
+        user = User.query.get(user_id)
+        family_association = FamilyProductAssociation(
+            family_id = user.family_id,
+            product_id = product_id
+        )
+
+        db.session.add(family_association)
+        db.session.commit()
+
         response = make_response({"message": "Successful", "id": product_id}, 201)
         return response
     except IntegrityError:

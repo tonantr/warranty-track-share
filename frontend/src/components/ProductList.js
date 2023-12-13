@@ -27,10 +27,13 @@ function ProductList() {
     };
 
     const handleAddProduct = (newProduct) => {
+        const token = localStorage.getItem('access_token');
+
         fetch(`${config.apiUrl}/productadd`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify(newProduct),
         })
