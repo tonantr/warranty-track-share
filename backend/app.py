@@ -211,6 +211,17 @@ def product_add():
         )
         return response
 
+@app.route("/productdel/<int:product_id>", methods=["DELETE"])
+@jwt_required()
+def product_delete(product_id):
+    product = Product.query.get(product_id)
+
+    if product:
+        db.session.delete(product)
+        db.session.commit()
+        return make_response({"message": "Product deleted successfully"}, 200)
+    else:
+        return make_response({"message": "Item not found or deletion failed"}, 404)
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)

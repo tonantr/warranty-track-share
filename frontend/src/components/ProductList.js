@@ -49,7 +49,30 @@ function ProductList() {
             .catch((error) => {
                 console.log(error)
             })
-    }
+    };
+
+    const handleDelete = (itemToDel) => {
+        const token = localStorage.getItem('access_token');
+
+        fetch(`${config.apiUrl}/productdel/${itemToDel.id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const updatedProducts = products.filter(item => item.id !== itemToDel.id);
+            setProducts(updatedProducts);
+        })
+        .catch(error => {
+            console.error('Error during deletion', error)
+        });
+        
+    };
 
     useEffect(() => {
         const token = localStorage.getItem('access_token');
@@ -92,7 +115,7 @@ function ProductList() {
             <br />
             <h1>Product List</h1>
 
-            <DataTable data={currentItems} />
+            <DataTable data={currentItems} onDelete={handleDelete} />
 
             <br />
 
