@@ -51,10 +51,10 @@ function ProductList() {
             })
     };
 
-    const handleDelete = (itemToDel) => {
+    const handleDelete = (deletedProduct) => {
         const token = localStorage.getItem('access_token');
 
-        fetch(`${config.apiUrl}/productdel/${itemToDel.id}`, {
+        fetch(`${config.apiUrl}/productdel/${deletedProduct.id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -65,13 +65,40 @@ function ProductList() {
             if (!res.ok) {
                 throw new Error('Network response was not ok');
             }
-            const updatedProducts = products.filter(item => item.id !== itemToDel.id);
+            const updatedProducts = products.filter(item => item.id !== deletedProduct.id);
             setProducts(updatedProducts);
         })
         .catch(error => {
             console.error('Error during deletion', error)
         });
         
+    };
+
+    const handleUpdate = (updatedProduct) => {
+        const token = localStorage.getItem('access_token');
+
+        fetch(`${config.apiUrl}/productupd/${updatedProduct.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(updatedProduct),
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            // console.log(data);
+            const updatedProducts = products.map((product) => {
+                if (product.id === updatedProduct.id) {
+                    return {...product, ...updatedProduct};
+                }
+                return product;
+            });
+            setProducts(updatedProducts)
+        })
+        .catch((error) => {
+            console.error('Error during update', error)
+        });
     };
 
     useEffect(() => {
@@ -115,7 +142,7 @@ function ProductList() {
             <br />
             <h1>Product List</h1>
 
-            <DataTable data={currentItems} onDelete={handleDelete} />
+            <DataTable data={currentItems} onDelete={handleDelete} onUpdate={handleUpdate} />
 
             <br />
 

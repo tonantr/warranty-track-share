@@ -8,6 +8,7 @@ from flask_jwt_extended import (
 from sqlalchemy.exc import IntegrityError
 from config import app, db, api, bcrypt
 from models import User, Product, Family, FamilyProductAssociation
+from datetime import datetime
 
 
 @app.route("/login", methods=["POST"])
@@ -222,6 +223,46 @@ def product_delete(product_id):
         return make_response({"message": "Product deleted successfully"}, 200)
     else:
         return make_response({"message": "Item not found or deletion failed"}, 404)
+
+@app.route("/productupd/<int:product_id>", methods=["PUT"])
+@jwt_required()
+def product_update(product_id):
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+
+    if not user:
+        return make_response({"message": "User not authenticated"}, 401)
+    
+    product = db.session.query(Product).get(product_id)
+
+    if not product:
+        return make_response({"message": "Product not found"}, 404)
+    
+    family_association = FamilyProductAssociation.query.filter_by(product_id=product_id).first()
+    
+    if not family_association:
+        return make_response({"message": "Unauthorized to update this product"}, 403)
+    
+    try:
+        json_data = request.get_json()
+
+        product.name = json_data.get("name", product.name)
+        product.brand = json_data.get("brand", product.brand)
+        product.model = json_data.get("model", product.model)
+        product.serial_number = json_data.get("serial_number", product.serial_number)
+        product.purchase_date = datetime.strptime(json_data.get("purchase_date", product.purchase_date), "%m-%d-%Y").date()
+        product.warranty_expiration_date = datetime.strptime(json_data.get("warranty_expiration_date", product.warranty_expiration_date), "%m-%d-%Y").date()
+
+        db.session.commit()
+
+        response = make_response({"message": "Product updated successfully"}, 200)
+        return response
+    except Exception as e:
+        db.session.rollback()
+        error_message = f"An error occurred: {str(e)}"
+        return make_response({"message": error_message}, 500)
+    finally:
+        db.session.close()
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
