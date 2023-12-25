@@ -133,7 +133,8 @@ def family_search():
 @jwt_required()
 def product_list():
     user_id = get_jwt_identity()
-    user = User.query.get(user_id)
+    user = db.session.get(User, user_id)
+
     if user:
         family = user.family
 
@@ -195,7 +196,8 @@ def product_add():
 
         product_id = new_product.id
 
-        user = User.query.get(user_id)
+        user = db.session.get(User, user_id)
+
         family_association = FamilyProductAssociation(
             family_id = user.family_id,
             product_id = product_id

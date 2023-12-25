@@ -14,6 +14,8 @@ from datetime import datetime
 
 from config import db, bcrypt
 
+from sqlalchemy.orm import relationship
+
 
 class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -70,6 +72,12 @@ class Product(db.Model, SerializerMixin):
     serial_number = db.Column(db.String(100))
     purchase_date = db.Column(db.Date, nullable=False)
     warranty_expiration_date = db.Column(db.Date, nullable=False)
+
+    family_product_associations = relationship(
+        "FamilyProductAssociation",
+        back_populates="product",
+        cascade="all, delete-orphan",
+    )
 
     def __init__(
         self,
