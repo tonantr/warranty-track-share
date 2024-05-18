@@ -10,11 +10,11 @@ import secrets
 
 app = Flask(__name__)
 
-
+# Enable Cross-Origin Resource Sharing (CORS)
 CORS(app)
 
+# Generate a secret key for session management if not set in environment
 secret_key = secrets.token_hex(16)
-
 app.secret_key = secret_key
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
