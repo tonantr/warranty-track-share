@@ -10,7 +10,7 @@ import secrets
 
 app = Flask(__name__)
 
-
+# Enable Cross-Origin Resource Sharing (CORS)
 CORS(app)
 
 secret_key = secrets.token_hex(16)
